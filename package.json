@@ -6,6 +6,7 @@
   "author": "Nick Matantsev <nick.matantsev@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.2.34"
+    "aws-sdk": "^2.2.34",
+    "express": "^4.13.4"
   }
 }

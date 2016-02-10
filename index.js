@@ -1,4 +1,5 @@
 var AWS = require('aws-sdk');
+var express = require('express');
 
 var S3_BUCKET = process.env.S3_BUCKET
 
@@ -10,11 +11,22 @@ var params = {
     Expires: 60 // 1 minute
 };
 
-s3.getSignedUrl('getObject', params, function (err, url) {
-    if (err) {
-        console.error('could not get url', err);
-        return;
-    }
+var app = express();
 
-    console.log('output:', url);
+// @todo rate limiting
+app.get('/go/', function (req, res) {
+    s3.getSignedUrl('getObject', params, function (err, url) {
+        if (err) {
+            console.error('could not get url', err);
+
+            res.status(500)
+            res.send('cannot redirect');
+            return;
+        }
+
+        console.info('redirecting', url); // @todo more info or just remove
+        res.redirect(302, url);
+    });
 });
+
+app.listen(process.env.PORT || 3000);
