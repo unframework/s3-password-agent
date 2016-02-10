@@ -1,5 +1,8 @@
+var fs = require('fs');
 var AWS = require('aws-sdk');
 var express = require('express');
+
+var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 
 var S3_BUCKET = process.env.S3_BUCKET
 
@@ -10,6 +13,23 @@ objectKeyMap['/key-graphic.png'] = true;
 var s3 = new AWS.S3();
 
 var app = express();
+
+// @todo rate limiting
+app.get(LINK_AGENT_ROUTE, function (req, res) {
+    // grab the client code file
+    // @todo minify/etc?
+    fs.readFile('client.js', function (err, fileData) {
+        if (err) {
+            console.error('could not read client file', err);
+
+            res.status(500)
+            res.send('error serving client');
+            return;
+        }
+
+        res.send(fileData);
+    });
+});
 
 // @todo rate limiting
 app.get(/^\/go(\/.*)$/, function (req, res) {
