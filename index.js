@@ -3,18 +3,36 @@ var express = require('express');
 
 var S3_BUCKET = process.env.S3_BUCKET
 
-var s3 = new AWS.S3();
+// whitelist accessible keys
+var objectKeyMap = Object.create(null);
+objectKeyMap['/key-graphic.png'] = true;
 
-var params = {
-    Key: 'key-graphic.png',
-    Bucket: S3_BUCKET,
-    Expires: 60 // 1 minute
-};
+var s3 = new AWS.S3();
 
 var app = express();
 
 // @todo rate limiting
-app.get('/go/', function (req, res) {
+app.get(/^\/go(\/.*)$/, function (req, res) {
+    var unsafeObjectPath = req.params[0];
+
+    // check whitelist
+    if (!Object.prototype.hasOwnProperty.call(objectKeyMap, unsafeObjectPath)) {
+        console.error('unknown key requested', unsafeObjectPath);
+
+        res.status(500)
+        res.send('cannot redirect');
+        return;
+    }
+
+    // strip leading slash to get object key for signing request
+    var accessibleObjectKey = unsafeObjectPath.substring(1);
+
+    var params = {
+        Key: accessibleObjectKey,
+        Bucket: S3_BUCKET,
+        Expires: 60 // 1 minute
+    };
+
     s3.getSignedUrl('getObject', params, function (err, url) {
         if (err) {
             console.error('could not get url', err);
