@@ -1,4 +1,7 @@
 var fs = require('fs');
+var stream = require('stream');
+var browserify = require('browserify');
+var Promise = require('bluebird');
 var AWS = require('aws-sdk');
 var express = require('express');
 
@@ -12,12 +15,32 @@ objectKeyMap['/key-graphic.png'] = true;
 
 var s3 = new AWS.S3();
 
+function whenClientSideCodeReady(sourceCode) {
+    var clientRC = new stream.Readable();
+    clientRC._read = function () {};
+    clientRC.push(sourceCode);
+    clientRC.push(null);
+
+    var b = browserify().add(clientRC, { basedir: __dirname });
+
+    return new Promise(function (resolve, reject) {
+        b.bundle(function (err, buffer) {
+            if(err) {
+                reject(err);
+            } else {
+                resolve(buffer);
+            }
+        });
+    });
+}
+
 var app = express();
 
 // @todo rate limiting
 app.get(LINK_AGENT_ROUTE, function (req, res) {
     // grab the client code file
     // @todo minify/etc?
+    // @todo cache the code?
     fs.readFile('client.js', function (err, fileData) {
         if (err) {
             console.error('could not read client file', err);
@@ -27,7 +50,10 @@ app.get(LINK_AGENT_ROUTE, function (req, res) {
             return;
         }
 
-        res.send(fileData);
+        whenClientSideCodeReady(fileData).then(function (output) {
+            res.setHeader('Content-Type', 'application/javascript');
+            res.send(output);
+        });
     });
 });
 
