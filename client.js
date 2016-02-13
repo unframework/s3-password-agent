@@ -1,6 +1,6 @@
 var Promise = require('bluebird');
 
-var AuthWallView = require('./lib/authWallView');
+var AuthWallView = require('./lib/AuthWallView');
 
 // @todo fill console object as needed
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
