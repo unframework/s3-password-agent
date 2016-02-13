@@ -1,3 +1,5 @@
+var vdomLive = require('vdom-live');
+
 var Auth = require('./lib/Auth');
 var AuthWallView = require('./lib/AuthWallView');
 
@@ -31,10 +33,14 @@ function convertLink(linkDom, baseURLPrefix) {
 }
 
 function main() {
-    var auth = new Auth();
+    vdomLive(function (renderLive, h) {
+        var auth = new Auth();
 
-    var authView = new AuthWallView(auth);
-    document.body.appendChild(authView.rootNode);
+        var authView = new AuthWallView(auth, h);
+        document.body.appendChild(renderLive(function () {
+            return authView.render();
+        }));
+    });
 
     // detect source (our own script tag should be available immediately)
     var baseURLPrefix = detectBaseURLPrefix();
