@@ -96,10 +96,18 @@ app.get(/^\/go(\/.*)$/, function (req, res) {
 
 var sessionApp = express.Router(); // @todo restrict domain
 sessionApp.use(cors());
+sessionApp.use(function (req, res, next) {
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+
+    next();
+});
 
 sessionApp.get('/status', function (req, res) {
     setTimeout(function () {
         res.status(200);
+        res.setHeader('Content-Type', 'application/json');
         res.send('true');
     }, 1000);
 });
