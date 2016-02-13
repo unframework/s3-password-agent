@@ -1,3 +1,7 @@
+var Promise = require('bluebird');
+
+var AuthWallView = require('./lib/authWallView');
+
 // @todo fill console object as needed
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 var GO_ROUTE_PREFIX = '/go/';
@@ -28,6 +32,23 @@ function convertLink(linkDom, baseURLPrefix) {
 }
 
 function main() {
+    var auth = {
+        isAuthenticated: false,
+        authenticate: function () {
+            return new Promise(function (resolve) {
+                // test timeout
+                setTimeout(function () {
+                    auth.isAuthenticated = true;
+
+                    resolve();
+                }, 1000);
+            });
+        }
+    };
+
+    var authView = new AuthWallView(auth);
+    document.body.appendChild(authView.rootNode);
+
     // detect source (our own script tag should be available immediately)
     var baseURLPrefix = detectBaseURLPrefix();
     console.log('s3-link-agent: URL prefix =', baseURLPrefix);
