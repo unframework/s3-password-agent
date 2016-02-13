@@ -4,6 +4,7 @@ var browserify = require('browserify');
 var Promise = require('bluebird');
 var AWS = require('aws-sdk');
 var express = require('express');
+var cors = require('cors');
 
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 
@@ -92,5 +93,17 @@ app.get(/^\/go(\/.*)$/, function (req, res) {
         res.redirect(302, url);
     });
 });
+
+var sessionApp = express.Router(); // @todo restrict domain
+sessionApp.use(cors());
+
+sessionApp.get('/status', function (req, res) {
+    setTimeout(function () {
+        res.status(200);
+        res.send('true');
+    }, 1000);
+});
+
+app.use('/session', sessionApp);
 
 app.listen(process.env.PORT || 3000);

@@ -4,6 +4,8 @@ var Auth = require('./lib/Auth');
 var AuthWallView = require('./lib/AuthWallView');
 
 // @todo fill console object as needed
+
+// @todo wrap in a "server routes" helper object (for both client and server)
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 var GO_ROUTE_PREFIX = '/go/';
 
@@ -33,15 +35,6 @@ function convertLink(linkDom, baseURLPrefix) {
 }
 
 function main() {
-    vdomLive(function (renderLive, h) {
-        var auth = new Auth();
-
-        var authView = new AuthWallView(auth, h);
-        document.body.appendChild(renderLive(function () {
-            return authView.render();
-        }));
-    });
-
     // detect source (our own script tag should be available immediately)
     var baseURLPrefix = detectBaseURLPrefix();
     console.log('s3-link-agent: URL prefix =', baseURLPrefix);
@@ -53,6 +46,15 @@ function main() {
             convertLink(linkDom, baseURLPrefix);
         });
     }, false);
+
+    vdomLive(function (renderLive, h) {
+        var auth = new Auth(baseURLPrefix);
+
+        var authView = new AuthWallView(auth, h);
+        document.body.appendChild(renderLive(function () {
+            return authView.render();
+        }));
+    });
 }
 
 main();
