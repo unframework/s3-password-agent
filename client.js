@@ -1,5 +1,4 @@
-var Promise = require('bluebird');
-
+var Auth = require('./lib/Auth');
 var AuthWallView = require('./lib/AuthWallView');
 
 // @todo fill console object as needed
@@ -32,19 +31,7 @@ function convertLink(linkDom, baseURLPrefix) {
 }
 
 function main() {
-    var auth = {
-        isAuthenticated: false,
-        authenticate: function () {
-            return new Promise(function (resolve) {
-                // test timeout
-                setTimeout(function () {
-                    auth.isAuthenticated = true;
-
-                    resolve();
-                }, 1000);
-            });
-        }
-    };
+    var auth = new Auth();
 
     var authView = new AuthWallView(auth);
     document.body.appendChild(authView.rootNode);
