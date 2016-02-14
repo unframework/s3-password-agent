@@ -6,15 +6,28 @@ var AWS = require('aws-sdk');
 var express = require('express');
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
+var yaml = require('js-yaml');
+
+var S3_BUCKET = process.env.S3_BUCKET;
+var CONTENT_CONFIG_FILE = __dirname + '/content.yaml';
 
 var AUTH_COOKIE = 's3-link-agent-93f04cb9-f0a0-475d-8c86-cf610c2002b5';
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 
-var S3_BUCKET = process.env.S3_BUCKET;
+var contentYaml = Array.prototype.slice.call(yaml.safeLoad(fs.readFileSync(CONTENT_CONFIG_FILE)));
 
 // whitelist accessible keys
 var objectKeyMap = Object.create(null);
-objectKeyMap['/key-graphic.png'] = true;
+contentYaml.forEach(function (rawConfigValue) {
+    if (typeof rawConfigValue !== 'string') {
+        throw new Error('content key whitelist must contain only strings');
+    }
+
+    var key = rawConfigValue[0] === '/' ? rawConfigValue.substring(1) : rawConfigValue;
+    objectKeyMap[key] = true;
+});
+
+console.log('using whitelist:', Object.keys(objectKeyMap));
 
 var origin = 'http://localhost:3000';
 
@@ -78,7 +91,7 @@ app.get(LINK_AGENT_ROUTE, function (req, res) {
 });
 
 // @todo rate limiting
-app.get(/^\/go(\/.*)$/, cookieParser(), sessionMiddleware, function (req, res) {
+app.get(/^\/go\/(.*)$/, cookieParser(), sessionMiddleware, function (req, res) {
     var unsafeObjectPath = req.params[0];
 
     // check whitelist
@@ -90,8 +103,7 @@ app.get(/^\/go(\/.*)$/, cookieParser(), sessionMiddleware, function (req, res) {
         return;
     }
 
-    // strip leading slash to get object key for signing request
-    var accessibleObjectKey = unsafeObjectPath.substring(1);
+    var accessibleObjectKey = unsafeObjectPath;
 
     var params = {
         Key: accessibleObjectKey,
