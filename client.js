@@ -39,22 +39,26 @@ function main() {
     var baseURLPrefix = detectBaseURLPrefix();
     console.log('s3-link-agent: URL prefix =', baseURLPrefix);
 
-    window.addEventListener('load', function () {
+    var rootNode = null;
+
+    vdomLive(function (renderLive, h) {
+        var auth = new Auth(baseURLPrefix);
+
+        var authView = new AuthWallView(auth, h);
+        rootNode = renderLive(function () {
+            return authView.render();
+        });
+    });
+
+    window.addEventListener('DOMContentLoaded', function () {
+        document.body.appendChild(rootNode);
+
         var linkList = Array.prototype.slice.call(document.querySelectorAll('a'));
 
         linkList.forEach(function (linkDom) {
             convertLink(linkDom, baseURLPrefix);
         });
     }, false);
-
-    vdomLive(function (renderLive, h) {
-        var auth = new Auth(baseURLPrefix);
-
-        var authView = new AuthWallView(auth, h);
-        document.body.appendChild(renderLive(function () {
-            return authView.render();
-        }));
-    });
 }
 
 main();
