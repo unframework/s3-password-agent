@@ -78,7 +78,7 @@ app.get(LINK_AGENT_ROUTE, function (req, res) {
 });
 
 // @todo rate limiting
-app.get(/^\/go(\/.*)$/, function (req, res) {
+app.get(/^\/go(\/.*)$/, cookieParser(), sessionMiddleware, function (req, res) {
     var unsafeObjectPath = req.params[0];
 
     // check whitelist
