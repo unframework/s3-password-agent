@@ -104,11 +104,31 @@ sessionApp.use(function (req, res, next) {
     next();
 });
 
-sessionApp.get('/status', function (req, res) {
+sessionApp.post('', function (req, res) {
+    var sessionKey = '_' + Math.random();
+
     setTimeout(function () {
         res.status(200);
         res.setHeader('Content-Type', 'application/json');
-        res.send('true');
+        res.send(JSON.stringify(sessionKey));
+    }, 1000);
+});
+
+sessionApp.get('/:key/status', function (req, res) {
+    var sessionKey = req.params.key;
+
+    setTimeout(function () {
+        res.status(200);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(true));
+    }, 1000);
+});
+
+sessionApp.post('/:key/sign-out', function (req, res) {
+    setTimeout(function () {
+        res.status(200);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(true));
     }, 1000);
 });
 
