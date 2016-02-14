@@ -39,6 +39,12 @@ function whenClientSideCodeReady(sourceCode) {
     });
 }
 
+function sessionMiddleware(req, res, next) {
+    req.sessionKey = req.cookies[AUTH_COOKIE] || null;
+
+    next();
+}
+
 var app = express();
 
 // @todo rate limiting
@@ -123,13 +129,11 @@ sessionApp.post('', function (req, res) {
     }, 1000);
 });
 
-sessionApp.get('/status', function (req, res) {
-    var sessionKey = req.cookies[AUTH_COOKIE] || null;
-
+sessionApp.get('/status', sessionMiddleware, function (req, res) {
     setTimeout(function () {
         res.status(200);
         res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(sessionKey !== null));
+        res.send(JSON.stringify(req.sessionKey !== null));
     }, 1000);
 });
 
