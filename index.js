@@ -5,14 +5,18 @@ var Promise = require('bluebird');
 var AWS = require('aws-sdk');
 var express = require('express');
 var cors = require('cors');
+var cookieParser = require('cookie-parser');
 
+var AUTH_COOKIE = 's3-link-agent-93f04cb9-f0a0-475d-8c86-cf610c2002b5';
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 
-var S3_BUCKET = process.env.S3_BUCKET
+var S3_BUCKET = process.env.S3_BUCKET;
 
 // whitelist accessible keys
 var objectKeyMap = Object.create(null);
 objectKeyMap['/key-graphic.png'] = true;
+
+var origin = 'http://localhost:3000';
 
 var s3 = new AWS.S3();
 
@@ -95,7 +99,10 @@ app.get(/^\/go(\/.*)$/, function (req, res) {
 });
 
 var sessionApp = express.Router(); // @todo restrict domain
-sessionApp.use(cors());
+sessionApp.use(cors({
+    origin: origin,
+    credentials: true
+}));
 sessionApp.use(function (req, res, next) {
     res.header('Expires', '-1');
     res.header('Pragma', 'no-cache');
@@ -103,30 +110,33 @@ sessionApp.use(function (req, res, next) {
 
     next();
 });
+sessionApp.use(cookieParser());
 
 sessionApp.post('', function (req, res) {
     var sessionKey = '_' + Math.random();
 
     setTimeout(function () {
         res.status(200);
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(sessionKey));
-    }, 1000);
-});
-
-sessionApp.get('/:key/status', function (req, res) {
-    var sessionKey = req.params.key;
-
-    setTimeout(function () {
-        res.status(200);
+        res.cookie(AUTH_COOKIE, sessionKey, { httpOnly: true });
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(true));
     }, 1000);
 });
 
-sessionApp.post('/:key/sign-out', function (req, res) {
+sessionApp.get('/status', function (req, res) {
+    var sessionKey = req.cookies[AUTH_COOKIE] || null;
+
     setTimeout(function () {
         res.status(200);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(sessionKey !== null));
+    }, 1000);
+});
+
+sessionApp.post('/sign-out', function (req, res) {
+    setTimeout(function () {
+        res.status(200);
+        res.cookie(AUTH_COOKIE, '', { httpOnly: true });
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(true));
     }, 1000);

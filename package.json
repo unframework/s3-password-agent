@@ -9,6 +9,7 @@
     "aws-sdk": "^2.2.34",
     "bluebird": "^3.3.0",
     "browserify": "^13.0.0",
+    "cookie-parser": "^1.4.1",
     "cors": "^2.7.1",
     "express": "^4.13.4",
     "vdom-live": "^1.1.2",
