@@ -40,7 +40,16 @@ function whenClientSideCodeReady(sourceCode) {
 }
 
 function sessionMiddleware(req, res, next) {
-    req.sessionKey = req.cookies[AUTH_COOKIE] || null;
+    var sessionKey = req.cookies[AUTH_COOKIE] || null;
+
+    // @todo proper validation
+    if (sessionKey === null) {
+        res.status(403);
+        res.send('not authorized');
+        return;
+    }
+
+    req.sessionKey = sessionKey;
 
     next();
 }
@@ -56,7 +65,7 @@ app.get(LINK_AGENT_ROUTE, function (req, res) {
         if (err) {
             console.error('could not read client file', err);
 
-            res.status(500)
+            res.status(500);
             res.send('error serving client');
             return;
         }
@@ -129,11 +138,11 @@ sessionApp.post('', function (req, res) {
     }, 1000);
 });
 
-sessionApp.get('/status', sessionMiddleware, function (req, res) {
+sessionApp.post('/assert', sessionMiddleware, function (req, res) {
     setTimeout(function () {
         res.status(200);
         res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(req.sessionKey !== null));
+        res.send(JSON.stringify(true));
     }, 1000);
 });
 
