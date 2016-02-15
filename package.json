@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "Nick Matantsev <nick.matantsev@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
   "engines": {
     "node": "0.12.7"
   },
