@@ -32,6 +32,7 @@ var s3 = new AWS.S3();
 var sessionMiddleware = new SessionMiddleware(AUTH_COOKIE);
 
 var app = express();
+app.get('/', function (req, res) { res.send('s3-link-agent'); }); // default text for looky-loos
 app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(__dirname + '/client.js', __dirname));
 app.use('/go', new LinkRouter(s3, configuredS3Bucket, contentYamlData, sessionMiddleware));
 app.use('/session', new SessionRouter(configuredCORSOrigin, usersYamlData, sessionMiddleware));
