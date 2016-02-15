@@ -193,20 +193,16 @@ sessionApp.post('', bodyParser.json(), function (req, res) {
 });
 
 sessionApp.post('/assert', sessionMiddleware, function (req, res) {
-    setTimeout(function () {
-        res.status(200);
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(true));
-    }, 1000);
+    res.status(200);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(true));
 });
 
 sessionApp.post('/sign-out', function (req, res) {
-    setTimeout(function () {
-        res.status(200);
-        res.cookie(AUTH_COOKIE, '', { httpOnly: true });
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(true));
-    }, 1000);
+    res.status(200);
+    res.cookie(AUTH_COOKIE, '', { httpOnly: true });
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(true));
 });
 
 app.use('/session', sessionApp);
