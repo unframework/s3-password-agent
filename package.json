@@ -5,6 +5,13 @@
   "main": "index.js",
   "author": "Nick Matantsev <nick.matantsev@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": "0.12.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unframework/s3-link-agent"
+  },
   "dependencies": {
     "aws-sdk": "^2.2.34",
     "bluebird": "^3.3.0",
