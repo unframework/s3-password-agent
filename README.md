@@ -10,6 +10,7 @@ Intended for use with any static site generator like GitHub Pages, with no extra
 
 ```sh
 cat <<EOF > test-env.sh
+export CORS_ORIGIN='http://localhost:3000'
 export PORT=3020
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
