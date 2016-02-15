@@ -23,7 +23,7 @@ var s3 = new AWS.S3();
 var sessionMiddleware = new SessionMiddleware(AUTH_COOKIE);
 
 var app = express();
-app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(__dirname));
+app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(__dirname + '/client.js', __dirname));
 app.use('/go', new LinkRouter(s3, S3_BUCKET, contentYamlData, sessionMiddleware));
 app.use('/session', new SessionRouter(origin, usersYamlData, sessionMiddleware));
 app.listen(process.env.PORT || 3000);
