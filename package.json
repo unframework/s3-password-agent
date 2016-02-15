@@ -1,7 +1,7 @@
 {
   "name": "s3-link-agent",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "S3 link agent: password protect Amazon S3 download links for static sites like GitHub Pages",
   "main": "index.js",
   "author": "Nick Matantsev <nick.matantsev@gmail.com>",
   "license": "MIT",
