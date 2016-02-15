@@ -171,10 +171,11 @@ sessionApp.post('/assert', sessionMiddleware, function (req, res) {
 });
 
 sessionApp.post('/sign-out', function (req, res) {
-    res.status(200);
-    res.cookie(AUTH_COOKIE, '', { httpOnly: true });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(true));
+    sessionMiddleware.clear(res, function () {
+        res.status(200);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(true));
+    });
 });
 
 app.use('/session', sessionApp);
