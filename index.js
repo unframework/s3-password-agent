@@ -7,7 +7,10 @@ var ClientAssetRouter = require('./lib/ClientAssetRouter');
 var LinkRouter = require('./lib/LinkRouter');
 var SessionRouter = require('./lib/SessionRouter');
 
-var S3_BUCKET = process.env.S3_BUCKET;
+var configuredS3Bucket = requiredValue(process.env.S3_BUCKET, 'target S3 bucket');
+var configuredCORSOrigin = requiredValue(process.env.CORS_ORIGIN, 'allowed CORS origin domain');
+var configuredPort = process.env.PORT || 3000;
+
 var CONTENT_CONFIG_FILE = __dirname + '/content.yaml';
 var USERS_CONFIG_FILE = __dirname + '/users.yaml';
 
@@ -17,13 +20,19 @@ var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 var contentYamlData = fs.readFileSync(CONTENT_CONFIG_FILE);
 var usersYamlData = fs.readFileSync(USERS_CONFIG_FILE);
 
-var origin = 'http://localhost:3000'; // @todo configure
+function requiredValue(val, description) {
+    if (val === null || val === undefined) {
+        throw new Error('missing configuration for: ' + description);
+    }
+
+    return val;
+}
 
 var s3 = new AWS.S3();
 var sessionMiddleware = new SessionMiddleware(AUTH_COOKIE);
 
 var app = express();
 app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(__dirname + '/client.js', __dirname));
-app.use('/go', new LinkRouter(s3, S3_BUCKET, contentYamlData, sessionMiddleware));
-app.use('/session', new SessionRouter(origin, usersYamlData, sessionMiddleware));
-app.listen(process.env.PORT || 3000);
+app.use('/go', new LinkRouter(s3, configuredS3Bucket, contentYamlData, sessionMiddleware));
+app.use('/session', new SessionRouter(configuredCORSOrigin, usersYamlData, sessionMiddleware));
+app.listen(configuredPort);
