@@ -32,8 +32,8 @@ contentYaml.forEach(function (rawConfigValue) {
     objectKeyMap[key] = true;
 });
 
-console.log('using whitelist:', Object.keys(objectKeyMap));
-console.log('authorized users list:', Object.keys(usersYaml));
+console.info('using whitelist:', Object.keys(objectKeyMap));
+console.info('authorized users list:', Object.keys(usersYaml));
 
 var origin = 'http://localhost:3000';
 
@@ -84,6 +84,7 @@ app.get(LINK_AGENT_ROUTE, function (req, res) {
 
 // @todo rate limiting
 app.get(/^\/go\/(.*)$/, cookieParser(), sessionMiddleware, function (req, res) {
+    var user = req.session.user;
     var unsafeObjectPath = req.params[0];
 
     // check whitelist
@@ -112,7 +113,7 @@ app.get(/^\/go\/(.*)$/, cookieParser(), sessionMiddleware, function (req, res) {
             return;
         }
 
-        console.info('redirecting', url); // @todo more info or just remove
+        console.info('redirecting', user, 'to:', url); // @todo more info or just remove
         res.redirect(302, url);
     });
 });
@@ -154,7 +155,9 @@ sessionApp.post('', bodyParser.json(), function (req, res) {
     }
 
     // user is authenticated
-    sessionMiddleware.setup(res, function () {
+    console.info('authenticated', email); // @todo more info or just remove
+
+    sessionMiddleware.setup(res, email, function () {
         res.status(200);
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(true));
