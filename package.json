@@ -14,6 +14,7 @@
     "cors": "^2.7.1",
     "express": "^4.13.4",
     "js-yaml": "^3.5.3",
+    "jsonwebtoken": "^5.5.4",
     "vdom-live": "^1.1.2",
     "xhr": "^2.2.0"
   }

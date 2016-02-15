@@ -1,4 +1,5 @@
 var fs = require('fs');
+var crypto = require('crypto');
 var stream = require('stream');
 var browserify = require('browserify');
 var Promise = require('bluebird');
@@ -8,6 +9,7 @@ var cors = require('cors');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var yaml = require('js-yaml');
+var jwt = require('jsonwebtoken');
 
 var S3_BUCKET = process.env.S3_BUCKET;
 var CONTENT_CONFIG_FILE = __dirname + '/content.yaml';
@@ -37,6 +39,15 @@ var origin = 'http://localhost:3000';
 
 var s3 = new AWS.S3();
 
+var sessionSecret = null;
+crypto.randomBytes(16, function (err, buf) {
+    if (err) {
+        throw err;
+    }
+
+    sessionSecret = buf;
+});
+
 function whenClientSideCodeReady(sourceCode) {
     var clientRC = new stream.Readable();
     clientRC._read = function () {};
@@ -57,18 +68,26 @@ function whenClientSideCodeReady(sourceCode) {
 }
 
 function sessionMiddleware(req, res, next) {
-    var sessionKey = req.cookies[AUTH_COOKIE] || null;
+    jwt.verify(req.cookies[AUTH_COOKIE] || '', sessionSecret, function (err) {
+        if (err) {
+            res.status(403);
+            res.send('not authorized');
+            return;
+        }
 
-    // @todo proper validation
-    if (sessionKey === null) {
-        res.status(403);
-        res.send('not authorized');
-        return;
-    }
+        // re-generate with new expiration time
+        setupSession(res, function () {
+            next();
+        });
+    });
+}
 
-    req.sessionKey = sessionKey;
+function setupSession(res, callback) {
+    jwt.sign({}, sessionSecret, { expiresIn: 1800 }, function (sessionToken) {
+        res.cookie(AUTH_COOKIE, sessionToken, { httpOnly: true });
 
-    next();
+        callback();
+    });
 }
 
 var app = express();
@@ -166,14 +185,11 @@ sessionApp.post('', bodyParser.json(), function (req, res) {
     }
 
     // user is authenticated
-    var sessionKey = '_' + Math.random();
-
-    setTimeout(function () {
+    setupSession(res, function () {
         res.status(200);
-        res.cookie(AUTH_COOKIE, sessionKey, { httpOnly: true });
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(true));
-    }, 1000);
+    });
 });
 
 sessionApp.post('/assert', sessionMiddleware, function (req, res) {
