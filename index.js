@@ -1,5 +1,4 @@
 var fs = require('fs');
-var crypto = require('crypto');
 var stream = require('stream');
 var browserify = require('browserify');
 var Promise = require('bluebird');
@@ -9,7 +8,8 @@ var cors = require('cors');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var yaml = require('js-yaml');
-var jwt = require('jsonwebtoken');
+
+var SessionMiddleware = require('./lib/SessionMiddleware');
 
 var S3_BUCKET = process.env.S3_BUCKET;
 var CONTENT_CONFIG_FILE = __dirname + '/content.yaml';
@@ -38,15 +38,7 @@ console.log('authorized users list:', Object.keys(usersYaml));
 var origin = 'http://localhost:3000';
 
 var s3 = new AWS.S3();
-
-var sessionSecret = null;
-crypto.randomBytes(16, function (err, buf) {
-    if (err) {
-        throw err;
-    }
-
-    sessionSecret = buf;
-});
+var sessionMiddleware = new SessionMiddleware(AUTH_COOKIE);
 
 function whenClientSideCodeReady(sourceCode) {
     var clientRC = new stream.Readable();
@@ -64,29 +56,6 @@ function whenClientSideCodeReady(sourceCode) {
                 resolve(buffer);
             }
         });
-    });
-}
-
-function sessionMiddleware(req, res, next) {
-    jwt.verify(req.cookies[AUTH_COOKIE] || '', sessionSecret, function (err) {
-        if (err) {
-            res.status(403);
-            res.send('not authorized');
-            return;
-        }
-
-        // re-generate with new expiration time
-        setupSession(res, function () {
-            next();
-        });
-    });
-}
-
-function setupSession(res, callback) {
-    jwt.sign({}, sessionSecret, { expiresIn: 1800 }, function (sessionToken) {
-        res.cookie(AUTH_COOKIE, sessionToken, { httpOnly: true });
-
-        callback();
     });
 }
 
@@ -185,7 +154,7 @@ sessionApp.post('', bodyParser.json(), function (req, res) {
     }
 
     // user is authenticated
-    setupSession(res, function () {
+    sessionMiddleware.setup(res, function () {
         res.status(200);
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(true));
