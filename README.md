@@ -1,10 +1,13 @@
-# [WIP] S3 Link Agent
+# S3 Link Agent
 
-S3 link agent: sign private S3 download links and insert redirect code into static pages.
+S3 link agent: password protect S3 download links for static sites like GitHub Pages. No extra generator plugins needed.
 
-Works as a Node-based redirect server for self-hosting (Heroku-friendly). Serves up a snippet of client-side JS that shows authentication UI (TODO) and replaces any link with `href="#s3/<objectkey>"` to point to the redirect server. The redirect server forwards the authenticated (TODO) user browser to a signed private S3 bucket link with a short expiry time.
+Configure and deploy this Node server to a free Heroku instance. The server provides a JS widget: include it in your static site. That's it.
 
-Intended for use with any static site generator like GitHub Pages, with no extra plugins.
+* user visits your site, ends up loading the JS widget
+* the JS widget asks user for login, authenticates against Heroku server
+* user clicks on the download link and is directed to the Heroku server
+* Heroku server signs a temporary private S3 link and returns a 301 redirect
 
 ## Development
 
