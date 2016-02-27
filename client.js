@@ -9,17 +9,17 @@ var AuthWallView = require('./lib/AuthWallView');
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 var GO_ROUTE_PREFIX = '/go/';
 
-function detectBaseURLPrefix() {
+function findScriptBySrcSuffix(suffix) {
     var fullScriptList = Array.prototype.slice.call(document.querySelectorAll('script'));
     var selfScriptList = fullScriptList.filter(function (dom) {
-        return (dom.src && dom.src.slice(-LINK_AGENT_ROUTE.length) === LINK_AGENT_ROUTE);
+        return (dom.src && dom.src.slice(-suffix.length) === suffix);
     });
 
     if (selfScriptList.length !== 1) {
         throw new Error('expected to find just one script matching self');
     }
 
-    return selfScriptList[0].src.slice(0, -LINK_AGENT_ROUTE.length);
+    return selfScriptList[0];
 }
 
 function convertLink(linkDom, baseURLPrefix) {
@@ -36,7 +36,7 @@ function convertLink(linkDom, baseURLPrefix) {
 
 function main() {
     // detect source (our own script tag should be available immediately)
-    var baseURLPrefix = detectBaseURLPrefix();
+    var baseURLPrefix = findScriptBySrcSuffix(LINK_AGENT_ROUTE).src.slice(0, -LINK_AGENT_ROUTE.length);
     console.log('s3-link-agent: URL prefix =', baseURLPrefix);
 
     var rootNode = null;
