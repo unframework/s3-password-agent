@@ -1,7 +1,3 @@
-var vdomLive = require('vdom-live');
-
-var Auth = require('./lib/Auth');
-var AuthWallView = require('./lib/AuthWallView');
 var ClientWidget = require('./lib/ClientWidget');
 
 // @todo fill console object as needed
@@ -24,21 +20,8 @@ function convertLink(linkDom, prefix) {
 
 function main() {
     new ClientWidget(LINK_AGENT_ROUTE, function (baseURLPrefix) {
-        var rootNode = null;
-
-        vdomLive(function (renderLive, h) {
-            var auth = new Auth(baseURLPrefix);
-
-            var authView = new AuthWallView(auth, h);
-            rootNode = renderLive(function () {
-                return authView.render();
-            });
-        });
-
-        return rootNode;
-    }, function (baseURLPrefix, rootNode) {
-        document.body.appendChild(rootNode);
-
+        // no-op
+    }, function (baseURLPrefix) {
         var linkList = Array.prototype.slice.call(document.querySelectorAll('a'));
 
         linkList.forEach(function (linkDom) {
