@@ -10,7 +10,6 @@ var SessionRouter = require('./lib/SessionRouter');
 var InterstitialRouter = require('./lib/InterstitialRouter');
 
 var configuredS3Bucket = requiredValue(process.env.S3_BUCKET, 'target S3 bucket');
-var configuredCORSOrigin = requiredValue(process.env.CORS_ORIGIN, 'allowed CORS origin domain');
 var configuredPort = process.env.PORT || 3000;
 
 var CONTENT_CONFIG_FILE = __dirname + '/content.yaml';
@@ -40,5 +39,5 @@ app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(__dirname + '/client.js', __dirn
 app.use(LINK_AGENT_MAIN_ROUTE, new ClientAssetRouter(__dirname + '/clientMain.js', __dirname));
 app.use('/go', new InterstitialRouter(LINK_AGENT_MAIN_ROUTE, '/download'));
 app.use('/download', cookieParser(), sessionMiddleware, new LinkRouter(s3, configuredS3Bucket, contentYamlData));
-app.use('/session', new SessionRouter(configuredCORSOrigin, usersYamlData, sessionMiddleware));
+app.use('/session', new SessionRouter(usersYamlData, sessionMiddleware));
 app.listen(configuredPort);

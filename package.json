@@ -21,7 +21,6 @@
     "body-parser": "^1.15.0",
     "browserify": "^13.0.0",
     "cookie-parser": "^1.4.1",
-    "cors": "^2.7.1",
     "express": "^4.13.4",
     "js-yaml": "^3.5.3",
     "jsonwebtoken": "^5.5.4",

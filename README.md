@@ -13,7 +13,6 @@ Configure and deploy this Node server to a free Heroku instance. The server prov
 
 ```sh
 cat <<EOF > test-env.sh
-export CORS_ORIGIN='http://localhost:3000'
 export PORT=3020
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
