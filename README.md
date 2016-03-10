@@ -8,11 +8,41 @@ Configure and deploy this Node server to a free Heroku instance. The server prov
 * Heroku server asks user for email + PIN
 * Heroku server signs a temporary private S3 link and returns a 302 redirect
 
+Content whitelist - `content.yaml` - is a list of allowed downloadable bucket paths:
+
+```yaml
+- myfile1.png
+- some/other/file2.pdf
+```
+
+User list - `users.yaml` - is a list of allowed emails with their PINs:
+
+```yaml
+user1@example.com:
+    pin: 1234
+user2@example.com:
+    pin: 01134
+```
+
+**SECURITY WARNING:** please do not use this for anything with real security needs. PINs are restricted to only being numeric, to discourage any real passwords being used. These PINs are stored in plaintext, committed to your local repo clone and pushed to Heroku, so anyone who can read the repo source code can read the PINs and gain access to the whitelisted files.
+
+Required Heroku configuration variables (do not commit these into the repo!):
+
+- AWS key ID and secret: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+- AWS bucket: `S3_BUCKET`
+
+Setting up download links from your webpages:
+
+* either point download links directly at `http://<heroku-server>/go/<your-file-path>`
+* or add the widget script `http://<heroku-server>/s3-link-agent.js` and then point links to `#s3/<your-file-path>`
+
+That's it.
+
 ## Development
 
 ```sh
 cat <<EOF > test-env.sh
-export PORT=3020
+export PORT=3020 # for testing only
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 export S3_BUCKET=...
