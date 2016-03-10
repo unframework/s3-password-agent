@@ -1,2 +1,10 @@
+# email/PIN list
+
+# user1@example.com:
+#    pin: 1234
+# user2@example.com:
+#    pin: 01134
+
+# don't forget to disable this sample user
 nick@example.com:
     pin: 1234
