@@ -56,3 +56,7 @@ supervisor index.js
 ```
 
 Then http://localhost:3000/example.html in browser.
+
+## To Do
+
+- glob matching on file path whitelist
