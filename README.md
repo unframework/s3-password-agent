@@ -4,10 +4,9 @@ S3 link agent: password protect S3 download links for static sites like GitHub P
 
 Configure and deploy this Node server to a free Heroku instance. The server provides a JS widget: include it in your static site. That's it.
 
-* user visits your site, ends up loading the JS widget
-* the JS widget asks user for login, authenticates against Heroku server
-* user clicks on the download link and is directed to the Heroku server
-* Heroku server signs a temporary private S3 link and returns a 301 redirect
+* user visits your site, clicks on the download link and is directed to the Heroku server
+* Heroku server asks user for email + PIN
+* Heroku server signs a temporary private S3 link and returns a 302 redirect
 
 ## Development
 
