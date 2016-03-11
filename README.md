@@ -13,6 +13,7 @@ Content whitelist - `content.yaml` - is a list of allowed downloadable bucket pa
 ```yaml
 - myfile1.png
 - some/other/file2.pdf
+- example*.*
 ```
 
 User list - `users.yaml` - is a list of allowed emails with their PINs:
