@@ -2,6 +2,7 @@ var fs = require('fs');
 var AWS = require('aws-sdk');
 var express = require('express');
 var cookieParser = require('cookie-parser');
+var yaml = require('js-yaml');
 
 var SessionMiddleware = require('./lib/SessionMiddleware');
 var ClientAssetRouter = require('./lib/ClientAssetRouter');
@@ -20,7 +21,9 @@ var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 var LINK_AGENT_MAIN_ROUTE = '/s3-link-agent-main.js';
 
 var contentYamlData = fs.readFileSync(CONTENT_CONFIG_FILE);
-var usersYamlData = fs.readFileSync(USERS_CONFIG_FILE);
+
+// @todo make UserDB class
+var usersYaml = yaml.safeLoad(fs.readFileSync(USERS_CONFIG_FILE)) || {};
 
 function requiredValue(val, description) {
     if (val === null || val === undefined) {
@@ -37,7 +40,7 @@ var app = express();
 app.get('/', function (req, res) { res.send('s3-link-agent'); }); // default text for looky-loos
 app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(__dirname + '/client.js', __dirname));
 app.use(LINK_AGENT_MAIN_ROUTE, new ClientAssetRouter(__dirname + '/clientMain.js', __dirname));
-app.use('/go', new InterstitialRouter(LINK_AGENT_MAIN_ROUTE, '/download'));
+app.use('/go', new InterstitialRouter(usersYaml, LINK_AGENT_MAIN_ROUTE, '/download'));
 app.use('/download', cookieParser(), sessionMiddleware, new LinkRouter(s3, configuredS3Bucket, contentYamlData));
-app.use('/session', new SessionRouter(usersYamlData, sessionMiddleware));
+app.use('/session', new SessionRouter(usersYaml, sessionMiddleware));
 app.listen(configuredPort);
