@@ -25,6 +25,10 @@ var contentYamlData = fs.readFileSync(CONTENT_CONFIG_FILE);
 // @todo make UserDB class
 var usersYaml = yaml.safeLoad(fs.readFileSync(USERS_CONFIG_FILE)) || {};
 
+var auth0Settings = {
+    secret: new Buffer(process.env.AUTH0_SECRET || '', 'base64')
+};
+
 function requiredValue(val, description) {
     if (val === null || val === undefined) {
         throw new Error('missing configuration for: ' + description);
@@ -42,5 +46,5 @@ app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(__dirname + '/client.js', __dirn
 app.use(LINK_AGENT_MAIN_ROUTE, new ClientAssetRouter(__dirname + '/clientMain.js', __dirname));
 app.use('/go', new InterstitialRouter(usersYaml, LINK_AGENT_MAIN_ROUTE, '/download'));
 app.use('/download', cookieParser(), sessionMiddleware, new LinkRouter(s3, configuredS3Bucket, contentYamlData));
-app.use('/session', new SessionRouter(usersYaml, sessionMiddleware));
+app.use('/session', new SessionRouter(usersYaml, auth0Settings, sessionMiddleware));
 app.listen(configuredPort);
