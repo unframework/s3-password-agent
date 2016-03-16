@@ -6,6 +6,8 @@ var AuthWallView = require('./lib/AuthWallView');
 
 var LINK_AGENT_MAIN_ROUTE = '/s3-link-agent-main.js';
 
+var downloadPath = window.DOWNLOAD_PATH;
+
 // @todo fill console object as needed
 
 function main() {
@@ -15,7 +17,7 @@ function main() {
         vdomLive(function (renderLive, h) {
             var auth = new Auth(baseURLPrefix);
 
-            var authView = new AuthWallView(auth, h);
+            var authView = new AuthWallView(auth, h, downloadPath);
             rootNode = renderLive(function () {
                 return authView.render();
             });
