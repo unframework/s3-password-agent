@@ -26,6 +26,8 @@ var contentYamlData = fs.readFileSync(CONTENT_CONFIG_FILE);
 var usersYaml = yaml.safeLoad(fs.readFileSync(USERS_CONFIG_FILE)) || {};
 
 var auth0Settings = {
+    domain: process.env.AUTH0_DOMAIN || '',
+    audience: process.env.AUTH0_AUDIENCE || '',
     secret: new Buffer(process.env.AUTH0_SECRET || '', 'base64')
 };
 
@@ -44,7 +46,7 @@ var app = express();
 app.get('/', function (req, res) { res.send('s3-link-agent'); }); // default text for looky-loos
 app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(__dirname + '/client.js', __dirname));
 app.use(LINK_AGENT_MAIN_ROUTE, new ClientAssetRouter(__dirname + '/clientMain.js', __dirname));
-app.use('/go', new InterstitialRouter(usersYaml, LINK_AGENT_MAIN_ROUTE, '/download'));
+app.use('/go', new InterstitialRouter(usersYaml, auth0Settings, LINK_AGENT_MAIN_ROUTE, '/download'));
 app.use('/download', cookieParser(), sessionMiddleware, new LinkRouter(s3, configuredS3Bucket, contentYamlData));
 app.use('/session', new SessionRouter(usersYaml, auth0Settings, sessionMiddleware));
 app.listen(configuredPort);
