@@ -29,6 +29,8 @@ Setting up download links from your webpages:
 * either point download links directly at `http://<heroku-server>/go/<your-file-path>`
 * or add the widget script `http://<heroku-server>/s3-link-agent.js` and then point links to `#s3/<your-file-path>`
 
+Ensure that Auth0 app settings include `http://<heroku-server>` in the CORS origin list, otherwise logins will fail.
+
 That's it.
 
 ## Simple Local Email + PIN Auth
