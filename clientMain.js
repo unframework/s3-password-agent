@@ -7,7 +7,6 @@ var AuthWallView = require('./lib/AuthWallView');
 var LINK_AGENT_MAIN_ROUTE = '/s3-link-agent-main.js';
 
 var downloadPath = window.DOWNLOAD_PATH;
-var auth0Lock = window.AUTH0_LOCK;
 
 var auth0Settings = require('__auth0');
 var auth0Lock = auth0Settings ? new require('auth0-lock')(auth0Settings.audience, auth0Settings.domain) : null;
