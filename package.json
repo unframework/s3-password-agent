@@ -16,6 +16,7 @@
     "url": "https://github.com/unframework/s3-link-agent"
   },
   "dependencies": {
+    "auth0-lock": "^9.0.0",
     "aws-sdk": "^2.2.34",
     "bluebird": "^3.3.0",
     "body-parser": "^1.15.0",
