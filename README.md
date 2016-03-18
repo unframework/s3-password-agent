@@ -8,6 +8,8 @@ Configure and deploy this Node server to a free Heroku instance. The server prov
 * Heroku server asks user for Auth0 login / simple email + PIN
 * Heroku server signs a temporary private S3 link and returns a 302 redirect
 
+In addition, the user can be prompted for login right away, before clicking on a download link. This gives a sense of a restricted area "login wall" although the initial content page is still served up and semi-visible behind the login popup. See below for pre-login popup setup.
+
 Two modes of authentication are supported: [Auth0 lock-screen](https://auth0.com/docs/libraries/lock) (preferred) or simple email + PIN (very insecure and basic). See below for email + PIN mode config.
 
 Content whitelist - `content.yaml` - is a list of allowed downloadable bucket paths:
@@ -33,11 +35,23 @@ Ensure that Auth0 app settings include `http://<heroku-server>` in the CORS orig
 
 That's it.
 
+## Pre-login Popup
+
+Edit and commit the CORS site list - `sites.yaml` - to contain the site where the auth popup will show:
+
+```yaml
+- http://mysite.example.com
+```
+
+Don't forget to add the same site to the Auth0 CORS origin set.
+
+Then include `http://<heroku-server>/s3-link-agent-login.js` as a script on your site (*instead* of `http://<heroku-server>/s3-link-agent.js`).
+
 ## Simple Local Email + PIN Auth
 
 Use of Auth0 for user sign-in is strongly recommended. This is the insecure local user list alternative.
 
-Edit the user list - `users.yaml` - set of allowed emails with their PINs:
+Edit and commit the user list - `users.yaml` - set of allowed emails with their PINs:
 
 ```yaml
 user1@example.com:
