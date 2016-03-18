@@ -20,6 +20,7 @@ var USERS_CONFIG_FILE = __dirname + '/users.yaml';
 
 var AUTH_COOKIE = 's3-link-agent-93f04cb9-f0a0-475d-8c86-cf610c2002b5';
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
+var LINK_AGENT_LOGIN_ROUTE = '/s3-link-agent-login.js';
 var LINK_AGENT_MAIN_ROUTE = '/s3-link-agent-main.js';
 
 var contentYamlData = fs.readFileSync(CONTENT_CONFIG_FILE);
@@ -50,6 +51,7 @@ var sessionMiddleware = new SessionMiddleware(AUTH_COOKIE);
 var app = express();
 app.get('/', function (req, res) { res.send('s3-link-agent'); }); // default text for looky-loos
 app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(auth0Settings, __dirname + '/client.js', __dirname));
+app.use(LINK_AGENT_LOGIN_ROUTE, new ClientAssetRouter(auth0Settings, __dirname + '/clientLogin.js', __dirname));
 app.use(LINK_AGENT_MAIN_ROUTE, new ClientAssetRouter(auth0Settings, __dirname + '/clientMain.js', __dirname));
 app.use('/go', new InterstitialRouter(LINK_AGENT_MAIN_ROUTE, '/download'));
 app.use('/download', cookieParser(), sessionMiddleware, new LinkRouter(s3, configuredS3Bucket, contentYamlData));

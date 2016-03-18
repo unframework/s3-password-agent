@@ -19,7 +19,7 @@ function main() {
         new ClientWidget(LINK_AGENT_MAIN_ROUTE, function (baseURLPrefix) {
             var rootNode = null;
 
-            var auth = new Auth(baseURLPrefix);
+            var auth = new Auth(baseURLPrefix, true);
 
             var authView = new AuthWallView(auth, h, downloadPath, auth0Lock);
             rootNode = renderLive(function () {
