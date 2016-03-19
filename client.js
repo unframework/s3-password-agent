@@ -3,7 +3,7 @@ var ClientWidget = require('./lib/ClientWidget');
 // @todo fill console object as needed
 
 // @todo wrap in a "server routes" helper object (for both client and server)
-var LINK_AGENT_ROUTE = '/s3-link-agent.js';
+var LINK_AGENT_ROUTE = '/s3-links.js';
 var GO_ROUTE_PREFIX = '/go/';
 
 function convertLink(linkDom, prefix) {
