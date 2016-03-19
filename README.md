@@ -32,7 +32,7 @@ Setting up download links from your webpages:
 * either point download links directly at `http://<heroku-server>/go/<your-file-path>`
 * or add the widget script `http://<heroku-server>/s3-link-agent.js` and then point links to `#s3/<your-file-path>`
 
-Ensure that Auth0 app settings include `http://<heroku-server>` in the CORS origin list, otherwise logins will fail.
+Ensure that Auth0 app settings include `http://<heroku-server>` in the CORS origin list, otherwise logins will fail. Set the Auth0 JWT expiration time to be reasonably short, e.g. `1800` (half-hour), because they are not retained once user logs in anyway.
 
 Don't forget to disable signups in Auth0! Go to **Connections**, find your database or social connection settings and turn on **Disable Sign Ups**. Otherwise, any anonymous visitor can choose to sign up and access your restricted links.
 
@@ -47,6 +47,8 @@ http://main-download-area.example.com, http://my-staging-area.localdomain
 ```
 
 Don't forget to add the same site to the Auth0 CORS origin set.
+
+Make sure that the `http://<heroku-server>` origin is still part of the Auth0 CORS origin set. That will help the user re-authenticate as needed during file download step.
 
 Then include `http://<heroku-server>/s3-link-agent-login.js` as a script on your site *instead* of `http://<heroku-server>/s3-link-agent.js`.
 
