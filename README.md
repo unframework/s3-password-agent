@@ -1,6 +1,6 @@
-# S3 Link Agent
+# S3 Password Agent
 
-S3 link agent: password protect S3 download links for static sites like GitHub Pages. No extra generator plugins needed.
+S3 Password Agent: password protect AWS S3 download links for static sites like GitHub Pages. No extra generator plugins needed.
 
 Configure and deploy this Node server to a free Heroku instance. The server provides a JS widget: include it in your static site. That's it.
 
