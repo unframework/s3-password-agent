@@ -20,11 +20,12 @@ Content whitelist - `content.yaml` - is a list of allowed downloadable bucket pa
 - example*.*
 ```
 
-Required Heroku configuration variables (do not commit these into the repo!):
+Environment variables (Heroku config vars):
 
-- Auth0 settings (skip if using local email + PIN auth): `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
 - AWS key ID and secret: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
 - AWS bucket: `S3_BUCKET`
+- Auth0 settings (skip if using local email + PIN auth): `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
+- CORS origin (if using pre-login): `CORS_ORIGIN`
 
 Setting up download links from your webpages:
 
@@ -39,10 +40,10 @@ That's it.
 
 ## Pre-login Popup
 
-Edit and commit the CORS site list - `sites.yaml` - to contain the site where the auth popup will show:
+Set up the CORS site origin config variable (`CORS_ORIGIN`) to contain the site where the auth popup will show. It may contain several comma/space separated values. For example:
 
-```yaml
-- http://mysite.example.com
+```
+http://main-download-area.example.com, http://my-staging-area.localdomain
 ```
 
 Don't forget to add the same site to the Auth0 CORS origin set.
@@ -71,12 +72,16 @@ If there is at least one local user defined, the login screen will stop showing 
 ```sh
 cat <<EOF > test-env.sh
 export PORT=3020 # for testing only
+
 export AUTH0_DOMAIN=...
 export AUTH0_CLIENT_ID=...
 export AUTH0_CLIENT_SECRET=...
+
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 export S3_BUCKET=...
+
+export CORS_ORIGIN=http://localhost:3000
 EOF
 
 . test-env.sh

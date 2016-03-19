@@ -11,11 +11,10 @@ var SessionRouter = require('./lib/SessionRouter');
 var InterstitialRouter = require('./lib/InterstitialRouter');
 
 var configuredS3Bucket = requiredValue(process.env.S3_BUCKET, 'target S3 bucket');
-var configuredCORSOrigin = process.env.CORS_ORIGIN || null;
+var configuredCORSOrigin = process.env.CORS_ORIGIN || '';
 var configuredPort = process.env.PORT || 3000;
 
 var CONTENT_CONFIG_FILE = __dirname + '/content.yaml';
-var SITES_CONFIG_FILE = __dirname + '/sites.yaml';
 var USERS_CONFIG_FILE = __dirname + '/users.yaml';
 
 var auth0Settings = process.env.AUTH0_DOMAIN ? {
@@ -32,7 +31,7 @@ var LINK_AGENT_MAIN_ROUTE = '/s3-link-agent-main.js';
 var contentYamlData = fs.readFileSync(CONTENT_CONFIG_FILE);
 
 // list of pre-login sites
-var sitesYaml = Array.prototype.slice.call(yaml.safeLoad(fs.readFileSync(SITES_CONFIG_FILE)) || []);
+var siteList = configuredCORSOrigin.split(/[\s,]+/g).filter(function (v) { return !!v.length; });
 
 // @todo make UserDB class
 var usersYaml = yaml.safeLoad(fs.readFileSync(USERS_CONFIG_FILE)) || {};
@@ -55,5 +54,5 @@ app.use(LINK_AGENT_LOGIN_ROUTE, new ClientAssetRouter(auth0Settings, __dirname +
 app.use(LINK_AGENT_MAIN_ROUTE, new ClientAssetRouter(auth0Settings, __dirname + '/clientMain.js', __dirname));
 app.use('/go', new InterstitialRouter(LINK_AGENT_MAIN_ROUTE, '/download'));
 app.use('/download', cookieParser(), sessionMiddleware, new LinkRouter(s3, configuredS3Bucket, contentYamlData));
-app.use('/session', new SessionRouter(usersYaml, auth0Settings, sessionMiddleware, sitesYaml));
+app.use('/session', new SessionRouter(usersYaml, auth0Settings, sessionMiddleware, siteList));
 app.listen(configuredPort);
