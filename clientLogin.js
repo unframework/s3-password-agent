@@ -7,7 +7,7 @@ var AuthWallView = require('./lib/AuthWallView');
 // @todo fill console object as needed
 
 // @todo wrap in a "server routes" helper object (for both client and server)
-var LINK_AGENT_LOGIN_ROUTE = '/s3-link-agent-login.js';
+var LINK_AGENT_LOGIN_ROUTE = '/s3-login.js';
 var GO_ROUTE_PREFIX = '/go/';
 
 var auth0Settings = require('__auth0');

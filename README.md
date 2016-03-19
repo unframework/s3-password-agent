@@ -50,7 +50,7 @@ Don't forget to add the same site to the Auth0 CORS origin set.
 
 Make sure that the `http://<heroku-server>` origin is still part of the Auth0 CORS origin set. That will help the user re-authenticate as needed during file download step.
 
-Then include `http://<heroku-server>/s3-link-agent-login.js` as a script on your site *instead* of `http://<heroku-server>/s3-link-agent.js`.
+Then include `http://<heroku-server>/s3-login.js` as a script on your site *instead* of `http://<heroku-server>/s3-link-agent.js`.
 
 ## Simple Local Email + PIN Auth
 
