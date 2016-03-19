@@ -18,6 +18,12 @@ var CONTENT_CONFIG_FILE = __dirname + '/content.yaml';
 var SITES_CONFIG_FILE = __dirname + '/sites.yaml';
 var USERS_CONFIG_FILE = __dirname + '/users.yaml';
 
+var auth0Settings = process.env.AUTH0_DOMAIN ? {
+    domain: process.env.AUTH0_DOMAIN,
+    audience: process.env.AUTH0_CLIENT_ID || '',
+    secret: new Buffer(process.env.AUTH0_CLIENT_SECRET || '', 'base64')
+} : null;
+
 var AUTH_COOKIE = 's3-link-agent-93f04cb9-f0a0-475d-8c86-cf610c2002b5';
 var LINK_AGENT_ROUTE = '/s3-link-agent.js';
 var LINK_AGENT_LOGIN_ROUTE = '/s3-link-agent-login.js';
@@ -30,12 +36,6 @@ var sitesYaml = Array.prototype.slice.call(yaml.safeLoad(fs.readFileSync(SITES_C
 
 // @todo make UserDB class
 var usersYaml = yaml.safeLoad(fs.readFileSync(USERS_CONFIG_FILE)) || {};
-
-var auth0Settings = process.env.AUTH0_DOMAIN ? {
-    domain: process.env.AUTH0_DOMAIN,
-    audience: process.env.AUTH0_AUDIENCE || '',
-    secret: new Buffer(process.env.AUTH0_SECRET || '', 'base64')
-} : null;
 
 function requiredValue(val, description) {
     if (val === null || val === undefined) {
