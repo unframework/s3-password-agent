@@ -3,3 +3,6 @@
 # - example1.pdf
 # - some/other/example2.pdf
 # - example*.*
+
+# allow access to all files in the bucket
+# - **/*
