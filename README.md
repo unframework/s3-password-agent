@@ -47,7 +47,7 @@ Edit and commit the CORS site list - `sites.yaml` - to contain the site where th
 
 Don't forget to add the same site to the Auth0 CORS origin set.
 
-Then include `http://<heroku-server>/s3-link-agent-login.js` as a script on your site (*instead* of `http://<heroku-server>/s3-link-agent.js`).
+Then include `http://<heroku-server>/s3-link-agent-login.js` as a script on your site *instead* of `http://<heroku-server>/s3-link-agent.js`.
 
 ## Simple Local Email + PIN Auth
 
