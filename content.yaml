@@ -5,4 +5,4 @@
 # - example*.*
 
 # allow access to all files in the bucket
-- **/*
+- /**
