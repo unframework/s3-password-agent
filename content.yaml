@@ -1,8 +1,9 @@
 # file path list
 
+# allow access to selective downloads using file path patterns
 # - example1.pdf
 # - some/other/example2.pdf
 # - example*.*
 
 # allow access to all files in the bucket
-- /**
+# - /**
