@@ -33,6 +33,8 @@ Setting up download links from your webpages:
 
 Ensure that Auth0 app settings include `http://<heroku-server>` in the CORS origin list, otherwise logins will fail.
 
+Don't forget to disable signups in Auth0! Go to **Connections**, find your database or social connection settings and turn on **Disable Sign Ups**. Otherwise, any anonymous visitor can choose to sign up and access your restricted links.
+
 That's it.
 
 ## Pre-login Popup
