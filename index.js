@@ -24,8 +24,8 @@ var auth0Settings = process.env.AUTH0_DOMAIN ? {
 } : null;
 
 var AUTH_COOKIE = 's3-link-agent-93f04cb9-f0a0-475d-8c86-cf610c2002b5';
-var LINK_AGENT_ROUTE = '/s3-links.js';
-var LINK_AGENT_LOGIN_ROUTE = '/s3-login.js';
+var LINK_AGENT_ROUTE = '/s3-links.js'; // uncommon name for better self-detection
+var LINK_AGENT_LOGIN_ROUTE = '/s3-login.js'; // uncommon name for better self-detection
 var LINK_AGENT_MAIN_ROUTE = '/go.js';
 
 var contentYamlData = fs.readFileSync(CONTENT_CONFIG_FILE);
