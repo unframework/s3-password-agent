@@ -4,7 +4,7 @@ var ClientWidget = require('./lib/ClientWidget');
 var Auth = require('./lib/Auth');
 var AuthWallView = require('./lib/AuthWallView');
 
-var LINK_AGENT_MAIN_ROUTE = '/s3-link-agent-main.js';
+var LINK_AGENT_MAIN_ROUTE = '/go.js';
 
 var downloadPath = window.DOWNLOAD_PATH;
 
