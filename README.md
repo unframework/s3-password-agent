@@ -30,9 +30,9 @@ Full list of environment variables (config vars in Heroku):
 
 - AWS key ID and secret: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
 - AWS bucket: `S3_BUCKET`
+- content whitelist (unless using `content.yaml`): `CONTENT`
 - Auth0 settings (skip if using local email + PIN auth): `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
 - CORS origin (if using pre-login): `CORS_ORIGIN`
-- content whitelist (unless using `content.yaml`): `CONTENT`
 
 Setting up download links from your webpages:
 
