@@ -12,10 +12,10 @@ In addition, the user can be prompted for login right away, before clicking on a
 
 Two modes of authentication are supported: [Auth0 lock-screen](https://auth0.com/docs/libraries/lock) (preferred) or simple email + PIN (very insecure and basic). See below for email + PIN mode config.
 
-All downloads have to match a content whitelist. It is a list of one or more full file paths relative to S3 bucket root. File patterns (globs) are also allowed (e.g. `test-*.html` matches `test-1.html` and `**` matches every file in the bucket). Simplest way to define it is to set the `CONTENT` env var as a comma- or space-separated list:
+All downloads have to match a content whitelist. It is a list of one or more full file paths relative to S3 bucket root. File patterns (globs) are also allowed (e.g. `test-*.pdf` matches `test-1.pdf` and `**` matches every file in the bucket). Simplest way to define it is to set the `CONTENT` env var as a comma- or space-separated list:
 
 ```
-docs/**, release-*/dist/*.tar.gz
+docs/**, release-*/dist/*.zip
 ```
 
 Alternatively, the content whitelist can be defined by editing and committing the config file - `content.yaml`:
