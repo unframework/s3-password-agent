@@ -11,7 +11,7 @@ How it works:
 
 * user visits your site, clicks on the download link and is directed to the password agent server
 * password agent server asks user for [Auth0 login](https://auth0.com/) / simple email + PIN
-* user receives an auto-generated a [temporary private S3 download URL](http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#RESTAuthenticationQueryStringAuth) and gets file
+* user receives an auto-generated [temporary private S3 download URL](http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#RESTAuthenticationQueryStringAuth) and gets file
 
 Pros: you get to have your own trusted server instead of having to rely on a third-party relay service. The code is tiny and easily configured with no code changes or setup files. Cons: you have to have some minimal experience setting up a Heroku instance/other Node.js host.
 
