@@ -2,6 +2,8 @@
 
 S3 Password Agent: password-protect AWS S3 download links for static sites like Jekyll / GitHub Pages. No extra generator plugins needed. [See live demo here](https://unframework.github.io/s3-password-agent-demo/).
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/unframework/s3-password-agent)
+
 How to use:
 
 * configure and deploy this Node.js server (e.g. Heroku or any other free host)
@@ -23,9 +25,9 @@ Two modes of authentication are supported: [Auth0 lock-screen](https://auth0.com
 
 Have your private S3 bucket ready, with an access key + secret authorized to read contents as appropriate.
 
-If using Auth0 as authentication provider (recommended), sign up for their free tier. Otherwise, see below for a less-secure + more-cumbersome local email/PIN method.
+If using Auth0 as authentication provider (recommended), [sign up for their free tier](https://auth0.com/how-it-works). Otherwise, see below for a less-secure + more-cumbersome local email/PIN method.
 
-Deploy the password agent server. Free Node.js hosts such as [Heroku](https://www.heroku.com/) are perfectly okay, nothing more fancy is needed.
+Deploy the password agent server. Free Node.js hosts such as [Heroku](https://www.heroku.com/) are perfectly okay, nothing more fancy is needed. Click on the above "[Deploy to Heroku](https://heroku.com/deploy?template=https://github.com/unframework/s3-password-agent)" button to get started.
 
 Most configuration happens via env vars (config vars in Heroku instance settings). Here is the full list:
 
