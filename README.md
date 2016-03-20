@@ -1,6 +1,6 @@
 # S3 Password Agent
 
-S3 Password Agent: password-protect AWS S3 download links for static sites like Jekyll / GitHub Pages. No extra generator plugins needed.
+S3 Password Agent: password-protect AWS S3 download links for static sites like Jekyll / GitHub Pages. No extra generator plugins needed. [See live demo here](https://unframework.github.io/s3-password-agent-demo/).
 
 How to use:
 
