@@ -1,6 +1,6 @@
 {
   "name": "s3-password-agent",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "S3 password agent: password protect Amazon AWS S3 download links for static sites like GitHub Pages",
   "private": true,
   "main": "index.js",
