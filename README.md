@@ -4,7 +4,7 @@ S3 Password Agent: password-protect AWS S3 download links for static sites like 
 
 How to use:
 
-* configure and deploy this on your own free Heroku instance (or any other host)
+* configure and deploy this Node.js server (e.g. Heroku or any other free host)
 * include script tag and download links on your static site
 
 How it works:
@@ -25,7 +25,7 @@ Have your private S3 bucket ready, with an access key + secret authorized to rea
 
 If using Auth0 as authentication provider (recommended), sign up for their free tier. Otherwise, see below for a less-secure + more-cumbersome local email/PIN method.
 
-Deploy the password agent server. Free hosts such as Heroku are perfectly okay, nothing more fancy is needed.
+Deploy the password agent server. Free Node.js hosts such as [Heroku](https://www.heroku.com/) are perfectly okay, nothing more fancy is needed.
 
 Most configuration happens via env vars (config vars in Heroku instance settings). Here is the full list:
 
@@ -34,6 +34,8 @@ Most configuration happens via env vars (config vars in Heroku instance settings
 - content whitelist (see below): `CONTENT`
 - Auth0 settings: `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
 - CORS origin (only if using pre-login): `CORS_ORIGIN`
+
+Your deployed password agent server will be accessible under a web URL that looks something like `https://abc123.herokuapp.com/` (any domain name works fine). Make note of it for later.
 
 All downloads have to match a content whitelist. It is a list of one or more full file paths relative to S3 bucket root. File patterns (globs) are also allowed (e.g. `test-*.pdf` matches `test-1.pdf` and `**` matches every file in the bucket). Simplest way to define it is to set the `CONTENT` env var as a comma- or space-separated list:
 
@@ -50,10 +52,10 @@ Alternatively, the content whitelist can be defined by editing and committing th
 
 Set up your static site (see [live demo page](https://unframework.github.io/s3-password-agent-demo/) for sample markup):
 
-* add the widget script `https://<heroku-server>/s3-links.js`, somewhere near the top of the page
+* add the widget script `https://<your-deployed-password-agent>/s3-links.js`, somewhere near the top of the page
 * point download links to `#s3/<your-file-path>`, where `<your-file-path>` is the file relative to the bucket root
 
-Ensure that Auth0 app settings include `https://<heroku-server>` in the CORS origin list, otherwise logins will fail. Set the Auth0 JWT expiration time to be reasonably short, e.g. `1800` (half-hour), because they are not retained once user logs in anyway.
+Ensure that Auth0 app settings include `https://<your-deployed-password-agent>` in the CORS origin list, otherwise logins will fail. Set the Auth0 JWT expiration time to be reasonably short, e.g. `1800` (half-hour), because they are not retained once user logs in anyway.
 
 Don't forget to disable signups in Auth0! Go to **Connections**, find your database or social connection settings and turn on **Disable Sign Ups**. Otherwise, any anonymous visitor can choose to sign up and access your restricted links.
 
@@ -71,9 +73,9 @@ https://main-download-area.example.com, https://my-staging-area.localdomain
 
 Don't forget to add the same site to the Auth0 CORS origin set.
 
-Make sure that the `https://<heroku-server>` origin is still part of the Auth0 CORS origin set. That will help the user re-authenticate as needed during file download step.
+Make sure that the `https://<your-deployed-password-agent>` origin is still part of the Auth0 CORS origin set. That will help the user re-authenticate as needed during file download step.
 
-Then include `https://<heroku-server>/s3-login.js` as a script on your site *instead* of `https://<heroku-server>/s3-links.js`.
+Then include `https://<your-deployed-password-agent>/s3-login.js` as a script on your site *instead* of `https://<your-deployed-password-agent>/s3-links.js`.
 
 ## Simple Local Email + PIN Auth
 
