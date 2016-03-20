@@ -2,13 +2,20 @@
 
 S3 Password Agent: password protect AWS S3 download links for static sites like GitHub Pages. No extra generator plugins needed.
 
-Configure and deploy this Node server to a free Heroku instance. The server provides a JS widget: include it in your static site. That's it.
+How to use:
 
-* user visits your site, clicks on the download link and is directed to the Heroku server
-* Heroku server asks user for Auth0 login / simple email + PIN
-* Heroku server signs a temporary private S3 link and returns a 302 redirect
+* configure and deploy this on your own free Heroku instance (or any other host)
+* include script tag and download links on your static site
 
-In addition, the user can be prompted for login right away, before clicking on a download link. This gives a sense of a restricted area "login wall" although the initial content page is still served up and semi-visible behind the login popup. See below for pre-login popup setup.
+How it works:
+
+* user visits your site, clicks on the download link and is directed to the password agent server
+* password agent server asks user for [Auth0 login](https://auth0.com/) / simple email + PIN
+* user receives an auto-generated a [temporary private S3 download URL](http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#RESTAuthenticationQueryStringAuth) and gets file
+
+Pros: you get to have your own trusted server instead of having to rely on a third-party relay service. The code is tiny and easily configured with no code changes or setup files. Cons: you have to have some minimal experience setting up a Heroku instance/other Node.js host.
+
+As an extra feature, the user can be prompted for login right away, before clicking on a download link. This gives a sense of a restricted area "login wall" although the initial content page is still semi-visible behind the login popup. See below for pre-login popup setup.
 
 Two modes of authentication are supported: [Auth0 lock-screen](https://auth0.com/docs/libraries/lock) (preferred) or simple email + PIN (very insecure and basic). See below for email + PIN mode config.
 
@@ -42,6 +49,8 @@ Setting up download links from your webpages:
 Ensure that Auth0 app settings include `https://<heroku-server>` in the CORS origin list, otherwise logins will fail. Set the Auth0 JWT expiration time to be reasonably short, e.g. `1800` (half-hour), because they are not retained once user logs in anyway.
 
 Don't forget to disable signups in Auth0! Go to **Connections**, find your database or social connection settings and turn on **Disable Sign Ups**. Otherwise, any anonymous visitor can choose to sign up and access your restricted links.
+
+Oh, and add the users that should access the downloads in the Auth0 user management dashboard.
 
 That's it.
 
