@@ -121,7 +121,3 @@ supervisor index.js
 ```
 
 Then visit `http://localhost:3000/examples/simple.html` in browser.
-
-## To Do
-
-- glob matching on file path whitelist
