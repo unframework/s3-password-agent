@@ -12,33 +12,33 @@
         "password"
     ],
     "env": {
+        "S3_BUCKET": {
+            "description": "S3 bucket name"
+        },
         "AWS_ACCESS_KEY_ID": {
             "description": "Amazon access key ID (public)"
         },
         "AWS_SECRET_ACCESS_KEY": {
             "description": "Amazon access key secret (private)"
         },
-        "S3_BUCKET": {
-            "description": "S3 bucket name"
-        },
         "CONTENT": {
-            "description": "Content whitelist",
-            "value": "**"
+            "description": "Content whitelist (\"/**\" allows access to all files)",
+            "value": "/**"
         },
         "AUTH0_DOMAIN": {
-            "description": "Auth0 domain",
+            "description": "Auth0 domain (skip if not using Auth0)",
             "required": false
         },
         "AUTH0_CLIENT_ID": {
-            "description": "Auth0 client ID (public)",
+            "description": "Auth0 client ID (public, skip if not using Auth0)",
             "required": false
         },
         "AUTH0_CLIENT_SECRET": {
-            "description": "Auth0 client secret (private)",
+            "description": "Auth0 client secret (private, skip if not using Auth0)",
             "required": false
         },
         "CORS_ORIGIN": {
-            "description": "CORS origin sites",
+            "description": "CORS origin sites (skip if not using pre-login)",
             "required": false
         }
     }
