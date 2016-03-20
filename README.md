@@ -28,9 +28,8 @@ docs/**, release-*/dist/*.zip
 Alternatively, the content whitelist can be defined by editing and committing the config file - `content.yaml`:
 
 ```yaml
-- myfile1.png
-- some/other/file2.pdf
-- example*.*
+- docs/**
+- release-*/dist/*.zip
 ```
 
 Full list of environment variables (config vars in Heroku):
