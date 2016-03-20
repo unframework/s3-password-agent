@@ -102,7 +102,7 @@ serve & # any background static server for the example page
 supervisor index.js
 ```
 
-Then http://localhost:3000/example.html in browser.
+Then visit `http://localhost:3000/examples/simple.html` in browser.
 
 ## To Do
 
