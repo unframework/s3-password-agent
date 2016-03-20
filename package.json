@@ -1,7 +1,7 @@
 {
   "name": "s3-password-agent",
   "version": "1.0.0",
-  "description": "S3 password agent: password protect Amazon AWS S3 download links for static sites like GitHub Pages",
+  "description": "S3 password agent: password protect Amazon AWS S3 download links for static sites like Jekyll / GitHub Pages",
   "private": true,
   "main": "index.js",
   "author": "Nick Matantsev <nick.matantsev@gmail.com>",
