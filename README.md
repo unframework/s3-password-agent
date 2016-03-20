@@ -32,8 +32,8 @@ Most configuration happens via env vars (config vars in Heroku instance settings
 - AWS key ID and secret: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
 - AWS bucket: `S3_BUCKET`
 - content whitelist (see below): `CONTENT`
-- Auth0 settings (skip if using local email + PIN auth): `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
-- CORS origin (if using pre-login): `CORS_ORIGIN`
+- Auth0 settings: `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
+- CORS origin (only if using pre-login): `CORS_ORIGIN`
 
 All downloads have to match a content whitelist. It is a list of one or more full file paths relative to S3 bucket root. File patterns (globs) are also allowed (e.g. `test-*.pdf` matches `test-1.pdf` and `**` matches every file in the bucket). Simplest way to define it is to set the `CONTENT` env var as a comma- or space-separated list:
 
