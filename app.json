@@ -1,0 +1,45 @@
+{
+    "name": "S3 Password Agent",
+    "description": "S3 password agent: password protect Amazon AWS S3 download links for static sites like Jekyll / GitHub Pages",
+    "repository": "https://github.com/unframework/s3-password-agent",
+    "keywords": [
+        "amazon",
+        "aws",
+        "s3",
+        "auth",
+        "authentication",
+        "login",
+        "password"
+    ],
+    "env": {
+        "AWS_ACCESS_KEY_ID": {
+            "description": "Amazon access key ID (public)"
+        },
+        "AWS_SECRET_ACCESS_KEY": {
+            "description": "Amazon access key secret (private)"
+        },
+        "S3_BUCKET": {
+            "description": "S3 bucket name"
+        },
+        "CONTENT": {
+            "description": "Content whitelist",
+            "value": "**"
+        },
+        "AUTH0_DOMAIN": {
+            "description": "Auth0 domain",
+            "required": false
+        },
+        "AUTH0_CLIENT_ID": {
+            "description": "Auth0 client ID (public)",
+            "required": false
+        },
+        "AUTH0_CLIENT_SECRET": {
+            "description": "Auth0 client secret (private)",
+            "required": false
+        },
+        "CORS_ORIGIN": {
+            "description": "CORS origin sites",
+            "required": false
+        }
+    }
+}
