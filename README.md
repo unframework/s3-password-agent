@@ -12,7 +12,13 @@ In addition, the user can be prompted for login right away, before clicking on a
 
 Two modes of authentication are supported: [Auth0 lock-screen](https://auth0.com/docs/libraries/lock) (preferred) or simple email + PIN (very insecure and basic). See below for email + PIN mode config.
 
-Content whitelist - `content.yaml` - is a list of allowed downloadable bucket paths:
+All downloads have to match a content whitelist. It is a list of one or more full file paths relative to S3 bucket root. File patterns (globs) are also allowed (e.g. `test-*.html` matches `test-1.html` and `**` matches every file in the bucket). Simplest way to define it is to set the `CONTENT` env var as a comma- or space-separated list:
+
+```
+docs/**, release-*/dist/*.tar.gz
+```
+
+Alternatively, the content whitelist can be defined by editing and committing the config file - `content.yaml`:
 
 ```yaml
 - myfile1.png
@@ -20,12 +26,13 @@ Content whitelist - `content.yaml` - is a list of allowed downloadable bucket pa
 - example*.*
 ```
 
-Environment variables (Heroku config vars):
+Full list of environment variables (config vars in Heroku):
 
 - AWS key ID and secret: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
 - AWS bucket: `S3_BUCKET`
 - Auth0 settings (skip if using local email + PIN auth): `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
 - CORS origin (if using pre-login): `CORS_ORIGIN`
+- content whitelist (unless using `content.yaml`): `CONTENT`
 
 Setting up download links from your webpages:
 
@@ -84,6 +91,8 @@ export AWS_SECRET_ACCESS_KEY=...
 export S3_BUCKET=...
 
 export CORS_ORIGIN=http://localhost:3000
+
+export CONTENT='/**'
 EOF
 
 . test-env.sh

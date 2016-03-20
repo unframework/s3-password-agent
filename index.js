@@ -12,6 +12,7 @@ var InterstitialRouter = require('./lib/InterstitialRouter');
 
 var configuredS3Bucket = requiredValue(process.env.S3_BUCKET, 'target S3 bucket');
 var configuredCORSOrigin = process.env.CORS_ORIGIN || '';
+var configuredContent = process.env.CONTENT || '';
 var configuredPort = process.env.PORT || 3000;
 
 var CONTENT_CONFIG_FILE = __dirname + '/content.yaml';
@@ -28,7 +29,15 @@ var LINK_AGENT_ROUTE = '/s3-links.js'; // uncommon name for better self-detectio
 var LINK_AGENT_LOGIN_ROUTE = '/s3-login.js'; // uncommon name for better self-detection
 var LINK_AGENT_MAIN_ROUTE = '/go.js';
 
-var contentYamlData = fs.readFileSync(CONTENT_CONFIG_FILE);
+// get content glob list from either source
+var contentYamlList = Array.prototype.slice.call(yaml.safeLoad(fs.readFileSync(CONTENT_CONFIG_FILE)) || []);
+var contentVarList = configuredContent.split(/[\s,]+/g).filter(function (v) { return !!v.length; });
+
+if (contentVarList.length > 0 && contentYamlList.length > 0) {
+    throw new Error('use either env var or file to define content whitelist but not both');
+}
+
+var contentList = contentVarList.length > 0 ? contentVarList : contentYamlList;
 
 // list of pre-login sites
 var siteList = configuredCORSOrigin.split(/[\s,]+/g).filter(function (v) { return !!v.length; });
@@ -53,6 +62,6 @@ app.use(LINK_AGENT_ROUTE, new ClientAssetRouter(auth0Settings, __dirname + '/cli
 app.use(LINK_AGENT_LOGIN_ROUTE, new ClientAssetRouter(auth0Settings, __dirname + '/clientLogin.js', __dirname));
 app.use(LINK_AGENT_MAIN_ROUTE, new ClientAssetRouter(auth0Settings, __dirname + '/clientMain.js', __dirname));
 app.use('/go', new InterstitialRouter(LINK_AGENT_MAIN_ROUTE, '/download'));
-app.use('/download', cookieParser(), sessionMiddleware, new LinkRouter(s3, configuredS3Bucket, contentYamlData));
+app.use('/download', cookieParser(), sessionMiddleware, new LinkRouter(s3, configuredS3Bucket, contentList));
 app.use('/session', new SessionRouter(usersYaml, auth0Settings, sessionMiddleware, siteList));
 app.listen(configuredPort);
