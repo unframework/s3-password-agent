@@ -19,6 +19,22 @@ As an extra feature, the user can be prompted for login right away, before click
 
 Two modes of authentication are supported: [Auth0 lock-screen](https://auth0.com/docs/libraries/lock) (preferred) or simple email + PIN (very insecure and basic). See below for email + PIN mode config.
 
+## Setup
+
+Have your private S3 bucket ready, with an access key + secret authorized to read contents as appropriate.
+
+If using Auth0 as authentication provider (recommended), sign up for their free tier. Otherwise, see below for a less-secure + more-cumbersome local email/PIN method.
+
+Deploy the password agent server. Free hosts such as Heroku are perfectly okay, nothing more fancy is needed.
+
+Most configuration happens via env vars (config vars in Heroku instance settings). Here is the full list:
+
+- AWS key ID and secret: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
+- AWS bucket: `S3_BUCKET`
+- content whitelist (see below): `CONTENT`
+- Auth0 settings (skip if using local email + PIN auth): `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
+- CORS origin (if using pre-login): `CORS_ORIGIN`
+
 All downloads have to match a content whitelist. It is a list of one or more full file paths relative to S3 bucket root. File patterns (globs) are also allowed (e.g. `test-*.pdf` matches `test-1.pdf` and `**` matches every file in the bucket). Simplest way to define it is to set the `CONTENT` env var as a comma- or space-separated list:
 
 ```
@@ -32,18 +48,10 @@ Alternatively, the content whitelist can be defined by editing and committing th
 - release-*/dist/*.zip
 ```
 
-Full list of environment variables (config vars in Heroku):
+Set up your static site (see [live demo page](https://unframework.github.io/s3-password-agent-demo/) for sample markup):
 
-- AWS key ID and secret: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
-- AWS bucket: `S3_BUCKET`
-- content whitelist (unless using `content.yaml`): `CONTENT`
-- Auth0 settings (skip if using local email + PIN auth): `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`
-- CORS origin (if using pre-login): `CORS_ORIGIN`
-
-Setting up download links from your webpages:
-
-* either point download links directly at `https://<heroku-server>/go/<your-file-path>`
-* or add the widget script `https://<heroku-server>/s3-links.js` and then point links to `#s3/<your-file-path>`
+* add the widget script `https://<heroku-server>/s3-links.js`, somewhere near the top of the page
+* point download links to `#s3/<your-file-path>`, where `<your-file-path>` is the file relative to the bucket root
 
 Ensure that Auth0 app settings include `https://<heroku-server>` in the CORS origin list, otherwise logins will fail. Set the Auth0 JWT expiration time to be reasonably short, e.g. `1800` (half-hour), because they are not retained once user logs in anyway.
 
@@ -80,7 +88,7 @@ user2@example.com:
     pin: 01134
 ```
 
-If there is at least one local user defined, the login screen will stop showing Auth0 prompt and ask for local email + PIN instead.
+PINs can only be numeric. Leave Auth0 settings unset to turn on the email + PIN authentication mode.
 
 **SECURITY WARNING:** please do not use this for anything with real security needs. PINs are restricted to only being numeric, to discourage any real passwords being used. These PINs are stored in plaintext, committed to your local repo clone and pushed to Heroku, so anyone who can read the repo source code can read the PINs and gain access to the whitelisted files.
 
